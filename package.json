@@ -1,0 +1,16 @@
+{
+  "name": "tholos",
+  "version": "0.1.0",
+  "description": "Tholos implementation",
+  "main": "main.js",
+  "scripts": {
+    "test": "./node_modules/.bin/nodemon ./node_modules/.bin/jasmine"
+  },
+  "author": "Raul Tierno",
+  "license": "MIT",
+  "devDependencies": {
+    "jasmine": "^3.10.0",
+    "nodemon": "^2.0.14"
+  },
+  "type": "module"
+}
