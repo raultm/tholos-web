@@ -97,6 +97,17 @@ describe("Pi", function() {
         expect(availableActions.options[0].text).toBe("b");
         expect(availableActions.options[1].text).toBe("g");
       });
+
+      it("should return available colors in rival workshop to steal avoiding bug when empty quarry", function() {
+        let event = eventBuilder.player("b").action("π").build()
+        game.setInteraction(event.json())
+        game.setQuarry("w", 0)
+        let availableActions = event.availableActions(game)
+        expect(availableActions.message).toBe("Which color?")
+        expect(availableActions.options.length).toBe(2);
+        expect(availableActions.options[0].text).toBe("w");
+        expect(availableActions.options[1].text).toBe("w");
+      });
       
     })
     

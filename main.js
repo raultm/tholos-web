@@ -1,7 +1,6 @@
 import Game from './modules/Game.js';
 
 import TextRenderer from './modules/renderers/TextRenderer.js';
-import EventBuilder from './modules/events/EventBuilder.js';
 
 
 // Show Game Status

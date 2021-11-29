@@ -78,7 +78,7 @@ describe("Epsilon", function() {
       game.evolve(EventBuilder.placedStoneEvent("b","b","π"))
     });
     
-    describe("from which columns", function(){
+    describe("which color", function(){
       
       it("should return available colors in player workshop to move", function() {
         let event = eventBuilder.player("b").action("Σ").build()
@@ -89,6 +89,19 @@ describe("Epsilon", function() {
         expect(availableActions.options[0].text).toBe("b");
       });
 
+      it("should return available colors in avoiding bug when empty quarry", function() {
+        let event = eventBuilder.player("b").action("Σ").build()
+        game.setInteraction(event.json())
+        game.setQuarry("b", 0)
+        let availableActions = event.availableActions(game)
+        expect(availableActions.message).toBe("Which color?")
+        expect(availableActions.options.length).toBe(1);
+        expect(availableActions.options[0].text).toBe("b");
+      });
+    
+    })
+
+    describe("to which column", function(){
       it("should return available columns ", function() {
         let event = eventBuilder.player("b").action("Σ").source("b").build()
         game.setInteraction(event.json())

@@ -144,6 +144,8 @@ class ChooseAction extends Stage {
                 return game.rollback()
             case "ended_turn":
                 return game.setStatus(new PlayerTurn(game.rival(event.data.player)))
+            case "ended_game":
+                return game.setStatus(new EndGame())
             default:
                 throw new Error(`${event.type} event is not available in ${this.constructor.name} Stage`)
         }

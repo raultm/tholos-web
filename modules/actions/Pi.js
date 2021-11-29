@@ -63,11 +63,9 @@ export default class Pi extends Action{
         let rivalWorkshop = game.workshop(game.rival(game.currentPlayer()))
         let options = []
         rivalWorkshop.map( color => {
-            if(game.quarry()[color] > 0){
-                let columnInteraction = event.json()
-                columnInteraction.data.source = color
-                options.push({text:color, interaction:columnInteraction})
-            }
+            let columnInteraction = event.json()
+            columnInteraction.data.source = color
+            options.push({text:color, interaction:columnInteraction})
         }, this)
         
         return {

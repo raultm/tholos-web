@@ -64,11 +64,9 @@ export default class Epsilon extends Action{
         let playerWorkshop = game.workshop(game.currentPlayer())
         let options = []
         playerWorkshop.map( color => {
-            if(game.quarry()[color] > 0){
-                let columnInteraction = event.json()
-                columnInteraction.data.source = color
-                options.push({text:color, interaction:columnInteraction})
-            }
+            let columnInteraction = event.json()
+            columnInteraction.data.source = color
+            options.push({text:color, interaction:columnInteraction})
         }, this)
         
         return {
