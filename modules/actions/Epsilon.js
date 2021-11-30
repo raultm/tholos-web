@@ -4,6 +4,22 @@ import EventBuilder from "../events/EventBuilder.js";
 
 export default class Epsilon extends Action{
 
+    getDescription(){
+        return "May place a stone (of any color) from their workshop in another valid temple location."
+    }
+
+    infoNoSource(){
+        return `${this.event().data.player} needs to select between available colors in own workshop`
+    }
+    
+    infoSource(){
+        return `${this.event().data.player} has selected ${this.event().data.source} stone from own workshop`
+    }
+
+    infoNoTarget(){
+        return `${this.event().data.player} needs to select target column`
+    }
+
     isPlayable(game, event){
         let stoneWorkshopIndex = game.player(event.data.player).workshop.indexOf(event.data.source)
         if(stoneWorkshopIndex == -1){
@@ -64,15 +80,17 @@ export default class Epsilon extends Action{
         let playerWorkshop = game.workshop(game.currentPlayer())
         let options = []
         playerWorkshop.map( color => {
-            if(game.quarry()[color] > 0){
-                let columnInteraction = event.json()
-                columnInteraction.data.source = color
-                options.push({text:color, interaction:columnInteraction})
-            }
+            let columnInteraction = event.json()
+            columnInteraction.data.source = color
+            options.push({text:color, interaction:columnInteraction})
         }, this)
         
         return {
-            message:"Which color?",
+            message:[
+                this.infoAction(),
+                this.infoNoSource(),
+                "Which color?"
+            ],
             options:options
         }
     }
@@ -92,7 +110,12 @@ export default class Epsilon extends Action{
             })
         
         return {
-            message:"To which column?",
+            message:[
+                this.infoAction(),
+                this.infoSource(),
+                this.infoNoTarget(),
+                "To which column?"
+            ],
             options:options
         }
     }

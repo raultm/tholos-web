@@ -1,4 +1,5 @@
 import EventBuilder from '../../../modules/events/EventBuilder.js';
+import ActionBuilder from '../../../modules/actions/ActionBuilder.js';
 
 import Game from '../../../modules/Game.js';
 
@@ -12,6 +13,13 @@ describe("Epsilon", function() {
     game = game.evolve(EventBuilder.createdBasicGameEventJson());
   });
   
+  describe("check description", function(){
+    it("should return Σ description", function() {
+      let action = ActionBuilder.fromName("Σ")
+      expect(action.getDescription()).toBe("May place a stone (of any color) from their workshop in another valid temple location.")
+    });
+  })
+
   describe("check availableActions on ChooseAction stage", function(){
     
     it("should return Σ action if ChooseAction invoked with placed_stone and player/stone same color & player has stones in its workshop", function() {
@@ -78,22 +86,42 @@ describe("Epsilon", function() {
       game.evolve(EventBuilder.placedStoneEvent("b","b","π"))
     });
     
-    describe("from which columns", function(){
+    describe("which color", function(){
       
       it("should return available colors in player workshop to move", function() {
         let event = eventBuilder.player("b").action("Σ").build()
         game.setInteraction(event.json())
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("Which color?")
+        expect(availableActions.message[0]).toBe("b is playing Σ action")
+        expect(availableActions.message[1]).toBe("b needs to select between available colors in own workshop")
+        expect(availableActions.message[2]).toBe("Which color?")
         expect(availableActions.options.length).toBe(1);
         expect(availableActions.options[0].text).toBe("b");
       });
 
+      it("should return available colors in avoiding bug when empty quarry", function() {
+        let event = eventBuilder.player("b").action("Σ").build()
+        game.setInteraction(event.json())
+        game.setQuarry("b", 0)
+        let availableActions = event.availableActions(game)
+        expect(availableActions.message[0]).toBe("b is playing Σ action")
+        expect(availableActions.message[1]).toBe("b needs to select between available colors in own workshop")
+        expect(availableActions.message[2]).toBe("Which color?")
+        expect(availableActions.options.length).toBe(1);
+        expect(availableActions.options[0].text).toBe("b");
+      });
+    
+    })
+
+    describe("to which column", function(){
       it("should return available columns ", function() {
         let event = eventBuilder.player("b").action("Σ").source("b").build()
         game.setInteraction(event.json())
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("To which column?")
+        expect(availableActions.message[0]).toBe("b is playing Σ action")
+        expect(availableActions.message[1]).toBe("b has selected b stone from own workshop")
+        expect(availableActions.message[2]).toBe("b needs to select target column")
+        expect(availableActions.message[3]).toBe("To which column?")
         expect(availableActions.options.length).toBe(6);
         expect(availableActions.options[0].text).toBe("Ω");
         expect(availableActions.options[1].text).toBe("α");
@@ -108,7 +136,10 @@ describe("Epsilon", function() {
         game.setInteraction(event.json())
         game.setColumnStones("β", ["g","b","w","g","g"])
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("To which column?")
+        expect(availableActions.message[0]).toBe("b is playing Σ action")
+        expect(availableActions.message[1]).toBe("b has selected b stone from own workshop")
+        expect(availableActions.message[2]).toBe("b needs to select target column")
+        expect(availableActions.message[3]).toBe("To which column?")
         expect(availableActions.options.length).toBe(5);
         expect(availableActions.options[0].text).toBe("Ω");
         expect(availableActions.options[1].text).toBe("α");

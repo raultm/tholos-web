@@ -293,7 +293,8 @@ export default class Game {
 
   getScore(){
     let columns = this.columns()
-    let info = Object.entries(columns).map( (value) => { 
+    let info = {}
+    info.columns = Object.entries(columns).map( (value) => { 
       let scoreByColumn = 0
       let winner = ""
       let countBy = value[1].stones.reduce((acc, current) => { acc[current]=acc[current]+1; return acc }, {w:0,b:0,g:0} )
@@ -304,6 +305,7 @@ export default class Game {
         winner = "b"
         scoreByColumn = countBy.b * 1 + countBy.w * 3 + countBy.g * -2 
       }else{
+        winner = "-"
         scoreByColumn = 0
       }
       let score = {
@@ -318,7 +320,7 @@ export default class Game {
         points: score.score
       }
     })
-    info.result = info
+    info.result = info.columns
       .filter((val) => val.winner != "")
       .reduce((acc, val) => { acc[val.winner] = acc[val.winner] + val.points; return acc}, {w:0,b:0})
     

@@ -3,6 +3,14 @@ import EventBuilder from "../events/EventBuilder.js";
 
 export default class Gamma extends Action{
 
+    getDescription(){
+        return "May return the top stone (of any color) of the column at a different temple location back to the quarry."
+    }
+
+    infoNoSource(){
+        return `${this.event().data.player} needs to select between columns to return top stone to quarry`
+    }
+
     isPlayable(game, event){
         if( game.column(event.data.source).stones.length == 0){
             return false
@@ -70,7 +78,11 @@ export default class Gamma extends Action{
             }, this)
         
         return {
-            message:"Which column?",
+            message:[
+                this.infoAction(),
+                this.infoNoSource(),
+                "From which column?"
+            ],
             options:options
         }
     }

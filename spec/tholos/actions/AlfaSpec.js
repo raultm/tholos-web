@@ -1,4 +1,5 @@
 import EventBuilder from '../../../modules/events/EventBuilder.js';
+import ActionBuilder from '../../../modules/actions/ActionBuilder.js';
 
 import Game from '../../../modules/Game.js';
 
@@ -12,6 +13,13 @@ describe("Alfa", function() {
     game = game.evolve(EventBuilder.createdBasicGameEventJson());
   });
   
+  describe("check description", function(){
+    it("should return α description", function() {
+      let action = ActionBuilder.fromName("α")
+      expect(action.getDescription()).toBe("May move the g top stone of the column at a different temple location to a third different —and valid— temple location.")
+    });
+  })
+
   describe("check availableActions on ChooseAction stage", function(){
 
     it("should return α action if ChooseAction invoked with placed_stone and player/stone same color & different column with gray stone in top", function() {
@@ -96,7 +104,9 @@ describe("Alfa", function() {
         game.setInteraction(event.json())
         game.setColumnStones("Ω", ["g"])
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("From which column?")
+        expect(availableActions.message[0]).toBe("b is playing α action")
+        expect(availableActions.message[1]).toBe("b needs to select source column with a g stone on top")
+        expect(availableActions.message[2]).toBe("From which column?")
         expect(availableActions.options[0].text).toBe("Ω");
       });
       
@@ -107,7 +117,9 @@ describe("Alfa", function() {
         game.setColumnStones("γ", ["g"])
   
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("From which column?")
+        expect(availableActions.message[0]).toBe("b is playing α action")
+        expect(availableActions.message[1]).toBe("b needs to select source column with a g stone on top")
+        expect(availableActions.message[2]).toBe("From which column?")
         expect(availableActions.options[0].text).toBe("Ω");
         expect(availableActions.options[1].text).toBe("γ");
       });
@@ -118,7 +130,7 @@ describe("Alfa", function() {
         game.setColumnStones("α", ["g"])
         game.setColumnStones("γ", ["g"])
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("From which column?")
+        expect(availableActions.message[2]).toBe("From which column?")
         expect(availableActions.options[0].text).toBe("γ");
       });
       
@@ -131,7 +143,10 @@ describe("Alfa", function() {
         game.setInteraction(event.json())
         game.setColumnStones("β", ["b"])
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("To which column?")
+        expect(availableActions.message[0]).toBe("b is playing α action")
+        expect(availableActions.message[1]).toBe("b has selected β as source column")
+        expect(availableActions.message[2]).toBe("b needs to select target column")
+        expect(availableActions.message[3]).toBe("To which column?")
         expect(availableActions.options.length).toBe(5);
         expect(availableActions.options[0].text).toBe("Ω");
         expect(availableActions.options[1].text).toBe("δ");
@@ -148,7 +163,10 @@ describe("Alfa", function() {
         game.setColumnStones("δ", ["b", "w", "g", "g", "g"])
         game.setColumnStones("γ", ["b", "w", "g", "g", "g"])
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("To which column?")
+        expect(availableActions.message[0]).toBe("b is playing α action")
+        expect(availableActions.message[1]).toBe("b has selected Ω as source column")
+        expect(availableActions.message[2]).toBe("b needs to select target column")
+        expect(availableActions.message[3]).toBe("To which column?")
         expect(availableActions.options.length).toBe(3);
         expect(availableActions.options[0].text).toBe("β");
         expect(availableActions.options[1].text).toBe("π");

@@ -3,6 +3,14 @@ import EventBuilder from "../events/EventBuilder.js";
 
 export default class Delta extends Action{
 
+    getDescription(){
+        return "May move a stone (of any color) from the quarry to your own workshop. You must have room for it."
+    }
+    
+    infoNoSource(){
+        return `${this.event().data.player} needs to select between available colors in quarry`
+    }
+
     isPlayable(game, event){
         return true
     }
@@ -62,7 +70,11 @@ export default class Delta extends Action{
         }, this)
         
         return {
-            message:"Which color?",
+            message:[
+                this.infoAction(),
+                this.infoNoSource(),
+                "Which color?"
+            ],
             options:options
         }
     }

@@ -5,6 +5,10 @@ export default class MoveColumn2Column extends Action {
     
     #stone
     
+    getDescription(){
+        return `May move the ${this.#stone} top stone of the column at a different temple location to a third different —and valid— temple location.`
+    }
+
     stone(){
         return this.#stone
     }
@@ -30,6 +34,22 @@ export default class MoveColumn2Column extends Action {
         return true
     }
     
+    infoAction(){
+        return `${this.event().data.player} is playing ${this.event().data.action} action`
+    }
+
+    infoNoSource(){
+        return `${this.event().data.player} needs to select source column with a ${this.stone()} stone on top`
+    }
+
+    infoSource(){
+        return `${this.event().data.player} has selected ${this.event().data.source} as source column`
+    }
+
+    infoNoTarget(){
+        return `${this.event().data.player} needs to select target column`
+    }
+
     reason(game, event){
         if(game.columnTop(event.data.source) != this.#stone){
             return `${event.data.source} does not have a ${this.#stone} stone on top to move`
@@ -84,7 +104,11 @@ export default class MoveColumn2Column extends Action {
             }, this)
         
         return {
-            message:"From which column?",
+            message:[
+                this.infoAction(),
+                this.infoNoSource(),
+                "From which column?"
+            ],
             options:options
         }
     }
@@ -105,7 +129,12 @@ export default class MoveColumn2Column extends Action {
             })
         
         return {
-            message:"To which column?",
+            message:[
+                this.infoAction(),
+                this.infoSource(),
+                this.infoNoTarget(),
+                "To which column?"
+            ],
             options:options
         }
     }

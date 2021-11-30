@@ -9,12 +9,16 @@ export default class EndGame extends State {
 
     availableActions(game){
         let score = game.getScore();
-        return {
-            message:[
-                "The game has finished.", 
-                `w has ${score.result.w} points`, 
-                `b has ${score.result.b} points`
-            ], options: []}
+        let columnsInfo = score.columns.map( column => `${column.column} - ${column.points} to ${column.winner} - b:${column.countBy.b}  w:${column.countBy.w}  g:${column.countBy.g  }`)
+        let message = [
+            "The game has finished.", 
+            `w has ${score.result.w} points`, 
+            `b has ${score.result.b} points`,
+            `------------------------------`,
+            `Columns`,
+        ]
+        message = message.concat(columnsInfo)
+        return { message: message, options: []}
     }
     
     on(game){

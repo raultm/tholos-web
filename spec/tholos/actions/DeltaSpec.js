@@ -1,4 +1,5 @@
 import EventBuilder from '../../../modules/events/EventBuilder.js';
+import ActionBuilder from '../../../modules/actions/ActionBuilder.js';
 
 import Game from '../../../modules/Game.js';
 
@@ -12,6 +13,13 @@ describe("Delta", function() {
     game = game.evolve(EventBuilder.createdBasicGameEventJson());
   });
   
+  describe("check description", function(){
+    it("should return δ description", function() {
+      let action = ActionBuilder.fromName("δ")
+      expect(action.getDescription()).toBe("May move a stone (of any color) from the quarry to your own workshop. You must have room for it.")
+    });
+  })
+
   describe("check availableActions on ChooseAction stage", function(){
 
     it("should return δ action if ChooseAction invoked with placed_stone and player/stone same color & quarry not empty", function() {
@@ -95,7 +103,9 @@ describe("Delta", function() {
         let event = eventBuilder.player("b").action("δ").build()
         game.setInteraction(event.json())
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("Which color?")
+        expect(availableActions.message[0]).toBe("b is playing δ action")
+        expect(availableActions.message[1]).toBe("b needs to select between available colors in quarry")
+        expect(availableActions.message[2]).toBe("Which color?")
         expect(availableActions.options.length).toBe(3);
         expect(availableActions.options[0].text).toBe("w");
         expect(availableActions.options[1].text).toBe("b");
@@ -108,7 +118,9 @@ describe("Delta", function() {
         game.setInteraction(event.json())
         game.setQuarry("b", 0)
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("Which color?")
+        expect(availableActions.message[0]).toBe("b is playing δ action")
+        expect(availableActions.message[1]).toBe("b needs to select between available colors in quarry")
+        expect(availableActions.message[2]).toBe("Which color?")
         expect(availableActions.options.length).toBe(2);
         expect(availableActions.options[0].text).toBe("w");
         expect(availableActions.options[1].text).toBe("g");

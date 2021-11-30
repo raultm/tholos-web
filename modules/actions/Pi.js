@@ -4,6 +4,14 @@ import EventBuilder from "../events/EventBuilder.js";
 
 export default class Pi extends Action{
 
+    getDescription(){
+        return "May move a stone (of any color) from rival’s workshop to your own workshop. You must have room for it."
+    }
+
+    infoNoSource(){
+        return `${this.event().data.player} needs to select between available colors in rival's workshop`
+    }
+
     isPlayable(game, event){
         let stoneWorkshopIndex = game.player(game.rival(event.data.player)).workshop.indexOf(event.data.source)
         if(stoneWorkshopIndex == -1){
@@ -63,15 +71,17 @@ export default class Pi extends Action{
         let rivalWorkshop = game.workshop(game.rival(game.currentPlayer()))
         let options = []
         rivalWorkshop.map( color => {
-            if(game.quarry()[color] > 0){
-                let columnInteraction = event.json()
-                columnInteraction.data.source = color
-                options.push({text:color, interaction:columnInteraction})
-            }
+            let columnInteraction = event.json()
+            columnInteraction.data.source = color
+            options.push({text:color, interaction:columnInteraction})
         }, this)
         
         return {
-            message:"Which color?",
+            message:[
+                this.infoAction(),
+                this.infoNoSource(),
+                "Which color?"
+            ],
             options:options
         }
     }

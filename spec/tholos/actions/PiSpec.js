@@ -1,4 +1,5 @@
 import EventBuilder from '../../../modules/events/EventBuilder.js';
+import ActionBuilder from '../../../modules/actions/ActionBuilder.js';
 
 import Game from '../../../modules/Game.js';
 
@@ -12,6 +13,13 @@ describe("Pi", function() {
     game = game.evolve(EventBuilder.createdBasicGameEventJson());
   });
   
+  describe("check description", function(){
+    it("should return π description", function() {
+      let action = ActionBuilder.fromName("π")
+      expect(action.getDescription()).toBe("May move a stone (of any color) from rival’s workshop to your own workshop. You must have room for it.")
+    });
+  })
+
   describe("check availableActions on ChooseAction stage", function(){
 
     it("should return π action if ChooseAction invoked with placed_stone and player/stone same color & rival has stones in its workshop", function() {
@@ -80,7 +88,9 @@ describe("Pi", function() {
         let event = eventBuilder.player("b").action("π").build()
         game.setInteraction(event.json())
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("Which color?")
+        expect(availableActions.message[0]).toBe("b is playing π action")
+        expect(availableActions.message[1]).toBe("b needs to select between available colors in rival's workshop")
+        expect(availableActions.message[2]).toBe("Which color?")
         expect(availableActions.options.length).toBe(2);
         expect(availableActions.options[0].text).toBe("w");
         expect(availableActions.options[1].text).toBe("w");
@@ -92,10 +102,25 @@ describe("Pi", function() {
         game.setInteraction(event.json())
         game.setWorkshop("w", ["b", "g"])
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("Which color?")
+        expect(availableActions.message[0]).toBe("b is playing π action")
+        expect(availableActions.message[1]).toBe("b needs to select between available colors in rival's workshop")
+        expect(availableActions.message[2]).toBe("Which color?")
         expect(availableActions.options.length).toBe(2);
         expect(availableActions.options[0].text).toBe("b");
         expect(availableActions.options[1].text).toBe("g");
+      });
+
+      it("should return available colors in rival workshop to steal avoiding bug when empty quarry", function() {
+        let event = eventBuilder.player("b").action("π").build()
+        game.setInteraction(event.json())
+        game.setQuarry("w", 0)
+        let availableActions = event.availableActions(game)
+        expect(availableActions.message[0]).toBe("b is playing π action")
+        expect(availableActions.message[1]).toBe("b needs to select between available colors in rival's workshop")
+        expect(availableActions.message[2]).toBe("Which color?")
+        expect(availableActions.options.length).toBe(2);
+        expect(availableActions.options[0].text).toBe("w");
+        expect(availableActions.options[1].text).toBe("w");
       });
       
     })

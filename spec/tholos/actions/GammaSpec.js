@@ -1,4 +1,5 @@
 import EventBuilder from '../../../modules/events/EventBuilder.js';
+import ActionBuilder from '../../../modules/actions/ActionBuilder.js';
 
 import Game from '../../../modules/Game.js';
 
@@ -12,6 +13,13 @@ describe("Gamma", function() {
     game = game.evolve(EventBuilder.createdBasicGameEventJson());
   });
   
+  describe("check description", function(){
+    it("should return γ description", function() {
+      let action = ActionBuilder.fromName("γ")
+      expect(action.getDescription()).toBe("May return the top stone (of any color) of the column at a different temple location back to the quarry.")
+    });
+  })
+
   describe("check availableActions on ChooseAction stage", function(){
     
     it("should return γ action if ChooseAction invoked with placed_stone and player/stone same color & at least another column is not empty", function() {
@@ -81,7 +89,9 @@ describe("Gamma", function() {
         game.setColumnStones("δ", ["w"])
         game.setColumnStones("π", ["w"])
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("Which column?")
+        expect(availableActions.message[0]).toBe("b is playing γ action")
+        expect(availableActions.message[1]).toBe("b needs to select between columns to return top stone to quarry")
+        expect(availableActions.message[2]).toBe("From which column?")
         expect(availableActions.options.length).toBe(3);
         expect(availableActions.options[0].text).toBe("β");
         expect(availableActions.options[1].text).toBe("δ");

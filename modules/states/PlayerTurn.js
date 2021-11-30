@@ -144,6 +144,8 @@ class ChooseAction extends Stage {
                 return game.rollback()
             case "ended_turn":
                 return game.setStatus(new PlayerTurn(game.rival(event.data.player)))
+            case "ended_game":
+                return game.setStatus(new EndGame())
             default:
                 throw new Error(`${event.type} event is not available in ${this.constructor.name} Stage`)
         }
@@ -168,7 +170,11 @@ class ChooseAction extends Stage {
                 let action = ActionBuilder.fromName(value)
                 if(this.#actions.includes(value)) {return}
                 if(action.isAvailable(game)){
-                    options.unshift({text:value, interaction: EventBuilder.triggeredActionEvent(this.#event.data.player, value, "", "")})
+                    options.unshift({
+                        text:value,
+                        description: action.getDescription(), 
+                        interaction: EventBuilder.triggeredActionEvent(this.#event.data.player, value, "", "")
+                    })
                 }
             }, this)
         }

@@ -53,7 +53,7 @@ export default class TextRenderer extends Renderer {
             + availableActions.options.map( element => {
 
                 let button = `<dt><input type="button" style="min-width:200px" onclick="handleAction('${JSON.stringify(element.interaction).replace(/\"/g,"&quot;")}')" value="${element.text}" /></dt>`
-                let description = element.interaction.description ? `<dd>${element.interaction.description}</dd>` : `<dd>&nbsp;</dd>`
+                let description = element.description ? `<dd>${element.description}</dd>` : `<dd>&nbsp;</dd>`
                 return button + description
             })
             .join("")

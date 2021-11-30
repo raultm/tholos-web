@@ -1,4 +1,5 @@
 import EventBuilder from '../../../modules/events/EventBuilder.js';
+import ActionBuilder from '../../../modules/actions/ActionBuilder.js';
 
 import Game from '../../../modules/Game.js';
 import TextRenderer from '../../../modules/renderers/TextRenderer.js';
@@ -13,6 +14,13 @@ describe("Omega", function() {
     game = game.evolve(EventBuilder.createdBasicGameEventJson());
   });
   
+  describe("check description", function(){
+    it("should return Ω description", function() {
+      let action = ActionBuilder.fromName("Ω")
+      expect(action.getDescription()).toBe("May move the b top stone of the column at a different temple location to a third different —and valid— temple location.")
+    });
+  })
+
   describe("check availableActions on ChooseAction stage", function(){
 
     it("should return Ω action if ChooseAction invoked with placed_stone and player/stone same color & different column with black stone in top", function() {
@@ -104,7 +112,9 @@ describe("Omega", function() {
         game.setInteraction(event.json())
         game.setColumnStones("α", ["b"])
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("From which column?")
+        expect(availableActions.message[0]).toBe("b is playing Ω action")
+        expect(availableActions.message[1]).toBe("b needs to select source column with a b stone on top")
+        expect(availableActions.message[2]).toBe("From which column?")
         expect(availableActions.options[0].text).toBe("α");
       });
   
@@ -115,7 +125,9 @@ describe("Omega", function() {
         game.setColumnStones("γ", ["b"])
   
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("From which column?")
+        expect(availableActions.message[0]).toBe("b is playing Ω action")
+        expect(availableActions.message[1]).toBe("b needs to select source column with a b stone on top")
+        expect(availableActions.message[2]).toBe("From which column?")
         expect(availableActions.options[0].text).toBe("α");
         expect(availableActions.options[1].text).toBe("γ");
       });
@@ -126,7 +138,9 @@ describe("Omega", function() {
         game.setColumnStones("Ω", ["b"])
         game.setColumnStones("α", ["b"])
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("From which column?")
+        expect(availableActions.message[0]).toBe("b is playing Ω action")
+        expect(availableActions.message[1]).toBe("b needs to select source column with a b stone on top")
+        expect(availableActions.message[2]).toBe("From which column?")
         expect(availableActions.options[0].text).toBe("α");
       });
     })
@@ -138,7 +152,10 @@ describe("Omega", function() {
         game.setInteraction(event.json())
         game.setColumnStones("α", ["b"])
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("To which column?")
+        expect(availableActions.message[0]).toBe("b is playing Ω action")
+        expect(availableActions.message[1]).toBe("b has selected α as source column")
+        expect(availableActions.message[2]).toBe("b needs to select target column")
+        expect(availableActions.message[3]).toBe("To which column?")
         expect(availableActions.options.length).toBe(5);
         expect(availableActions.options[0].text).toBe("β");
         expect(availableActions.options[1].text).toBe("δ");
@@ -155,7 +172,10 @@ describe("Omega", function() {
         game.setColumnStones("δ", ["b", "w", "g", "g", "g"])
         game.setColumnStones("γ", ["b", "w", "g", "g", "g"])
         let availableActions = event.availableActions(game)
-        expect(availableActions.message).toBe("To which column?")
+        expect(availableActions.message[0]).toBe("b is playing Ω action")
+        expect(availableActions.message[1]).toBe("b has selected α as source column")
+        expect(availableActions.message[2]).toBe("b needs to select target column")
+        expect(availableActions.message[3]).toBe("To which column?")
         expect(availableActions.options.length).toBe(3);
         expect(availableActions.options[0].text).toBe("β");
         expect(availableActions.options[1].text).toBe("π");
