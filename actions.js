@@ -2,6 +2,55 @@ window.newGame = function(){
     game.loadEvents({"type":"created_game","data":{"type":"basic"}})
 }
 
+
+window.exportGame = function()
+{
+    // In localStorage save as binaryString, convert to Binary Array
+    var arraybuff = toBinArray(JSON.stringify(game.events()));
+    var blob = new Blob([arraybuff]);
+    var a = document.createElement("a");
+    document.body.appendChild(a);
+    a.href = window.URL.createObjectURL(blob);
+    a.download = "tholos.game";
+    a.onclick = function () {
+        setTimeout(function () {
+        window.URL.revokeObjectURL(a.href);
+        }, 1500);
+    };
+    a.click();
+}
+
+window.importGame = function()
+{
+    var fileInput = document.getElementById("gamefile")
+    var f = fileInput.files[0];
+    var r = new FileReader();
+    
+    
+	r.onload = function (event) { 
+        let events = JSON.parse(toBinString(r.result))
+        console.log(...events)
+        game.loadEvents(...events); 
+    }
+	r.readAsArrayBuffer(f);
+}
+
+window.toBinArray = function(str) {
+    var l = str.length,
+        arr = new Uint16Array(l);
+    for (var i = 0; i < l; i++) arr[i] = str.charCodeAt(i);
+    return arr;
+}
+
+window.toBinString = function(arr) {
+    var uarr = new Uint16Array(arr);
+    var strings = [], chunksize = 0xffff;
+    // There is a maximum stack size. We cannot call String.fromCharCode with as many arguments as we want
+    for (var i = 0; i * chunksize < uarr.length; i++) {
+        strings.push(String.fromCharCode.apply(null, uarr.subarray(i * chunksize, (i + 1) * chunksize)));
+    }
+    return strings.join('');
+}
 window.bug1 = function(){
     game.loadEvents(
         {"type":"created_game","data":{"type":"basic"}},
