@@ -71,13 +71,6 @@ describe("End Game", function() {
       expect(score.columns.length).toBe(7);
     });
 
-    
   })
-
-  
-
-  
-
-  
   
 });
